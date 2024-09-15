@@ -70,10 +70,9 @@ ax.set_title('Tren Historis Variabel Emisi GRK dan Faktor Terkait', fontsize=16)
 ax.set_xlabel('Tahun', fontsize=14)
 ax.set_ylabel('Nilai', fontsize=14)
 ax.legend(loc='best')
-ax.grid(True)  # Add grid lines
+ax.grid(True)  
 st.pyplot(fig)
 
-# GHG Emissions Prediction
 st.header('Prediksi Emisi GRK')
 features = ['gdp', 'population', 'primary_energy_consumption', 'industrial_production_index', 'renewable_energy_percentage', 'crude_oil_price', 'energy_investment']
 available_features = [f for f in features if f in df.columns]
