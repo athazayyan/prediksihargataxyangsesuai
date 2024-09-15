@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -13,7 +14,7 @@ def load_data():
     df = df[df['country'] == 'Indonesia'].set_index('year')
     
     # Add new data
-    df['carbon_price'] = pd.Series({2022: 30000}, index=df.index)  # Assuming 30000 IDR/tCO2 for 2022
+    df['carbon_price'] = pd.Series({2022: 30000}, index=df.index) 
     
     # Add industrial production index
     prod_index = pd.Series({
@@ -66,10 +67,12 @@ st.header('Tren Historis')
 variables = st.multiselect('Pilih variabel untuk ditampilkan:', df.columns.tolist(), default=['co2', 'gdp'])
 fig, ax = plt.subplots(figsize=(12, 6))
 for var in variables:
-    ax.plot(df.index, df[var], label=var)
-ax.set_xlabel('Tahun')
-ax.set_ylabel('Nilai')
-ax.legend()
+    ax.plot(df.index, df[var], label=var, marker='o')  # Add markers for better visibility
+ax.set_title('Tren Historis Variabel Emisi GRK dan Faktor Terkait', fontsize=16)
+ax.set_xlabel('Tahun', fontsize=14)
+ax.set_ylabel('Nilai', fontsize=14)
+ax.legend(loc='best')
+ax.grid(True)  # Add grid lines
 st.pyplot(fig)
 
 # GHG Emissions Prediction
@@ -97,7 +100,23 @@ for year in range(df.index.max() + 1, future_years + 1):
     # Add assumptions for other features if necessary
 
 predictions_df = pd.DataFrame(predictions, columns=['year', 'predicted_co2']).set_index('year')
-st.write(predictions_df)
+
+# Plot predictions
+fig, ax = plt.subplots(figsize=(12, 6))
+
+# Historical CO2 data
+ax.plot(df.index, df['co2'], label='Emisi GRK Historis', color='blue', marker='o')
+
+# Predictions
+predictions_df.index = predictions_df.index.astype(int)
+ax.plot(predictions_df.index, predictions_df['predicted_co2'], label='Prediksi Emisi GRK', color='red', linestyle='--', marker='x')
+
+ax.set_title('Prediksi Emisi GRK Masa Depan', fontsize=16)
+ax.set_xlabel('Tahun', fontsize=14)
+ax.set_ylabel('Emisi CO2 (tCO2)', fontsize=14)
+ax.legend(loc='best')
+ax.grid(True)
+st.pyplot(fig)
 
 # Carbon price recommendation
 st.header('Rekomendasi Harga Karbon')
@@ -118,24 +137,23 @@ st.write('Catatan: Rekomendasi ini berdasarkan perubahan prediksi emisi dan haru
 st.header('Analisis Korelasi')
 corr_matrix = df[available_features + ['co2']].corr()
 fig, ax = plt.subplots(figsize=(12, 10))
-plt.imshow(corr_matrix, cmap='coolwarm', aspect='auto')
-plt.colorbar()
-plt.xticks(range(len(corr_matrix.columns)), corr_matrix.columns, rotation=90)
-plt.yticks(range(len(corr_matrix.columns)), corr_matrix.columns)
-plt.title('Matriks Korelasi')
+cax = ax.matshow(corr_matrix, cmap='coolwarm', vmin=-1, vmax=1)
+fig.colorbar(cax)
+ax.set_xticks(range(len(corr_matrix.columns)))
+ax.set_yticks(range(len(corr_matrix.columns)))
+ax.set_xticklabels(corr_matrix.columns, rotation=90)
+ax.set_yticklabels(corr_matrix.columns)
+ax.set_title('Matriks Korelasi', fontsize=16)
+
+# Add value annotations
+for i in range(len(corr_matrix.columns)):
+    for j in range(len(corr_matrix.columns)):
+        text = ax.text(j, i, f'{corr_matrix.iloc[i, j]:.2f}', ha='center', va='center', color='black')
+
 st.pyplot(fig)
 
 # Recommendations
 st.header('Rekomendasi Kebijakan')
-st.write("""
-Berdasarkan analisis di atas, berikut beberapa rekomendasi kebijakan:
-
-1. Pertimbangkan untuk meningkatkan harga karbon secara bertahap sesuai dengan proyeksi emisi.
-2. Fokus pada peningkatan persentase energi terbarukan dalam bauran energi untuk mengurangi emisi.
-3. Dorong investasi di sektor energi bersih untuk mendukung transisi energi.
-4. Implementasikan kebijakan untuk meningkatkan efisiensi energi di sektor industri.
-5. Pertahankan dan tingkatkan luas tutupan hutan untuk menjaga penyerapan karbon alami.
-6. Lakukan pemantauan dan evaluasi berkala terhadap efektivitas kebijakan harga karbon.
-""")
-
-st.write('Catatan: Aplikasi ini menggunakan data historis dan proyeksi sederhana. Untuk pengambilan keputusan yang lebih akurat, diperlukan analisis yang lebih mendalam dan pertimbangan faktor-faktor tambahan.')
+st.write('Berdasarkan analisis di atas, berikut beberapa rekomendasi kebijakan:')
+st.write('1. Pertimbangkan untuk meningkatkan harga karbon secara bertahap sesuai dengan proyeksi emisi.')
+st.write('2. Fokus pada peningkatan persentase energi terbarukan dalam bauran energi')
