@@ -95,8 +95,8 @@ for year in range(df.index.max() + 1, future_years + 1):
     future_X.index = [year]
     pred = model.predict(future_X)
     predictions.append((year, pred[0]))
-    future_X['gdp'] *= 1.0511  # Indonesia 5.11% annual GDP pertumbuhan
-    future_X['population'] *= 1.088  # 0.88% annual population growth
+    future_X['gdp'] *= 1.05  # Indonesia 5.11% annual GDP pertumbuhan
+    future_X['population'] *= 1.08  # 0.88% annual population growth
     # Add assumptions for other features if necessary
 
 predictions_df = pd.DataFrame(predictions, columns=['year', 'predicted_co2']).set_index('year')
