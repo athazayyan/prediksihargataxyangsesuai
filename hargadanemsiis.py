@@ -54,3 +54,7 @@ plot_price_projection(selected_year)
 
 # Plot the CO2 emission reduction graph
 plot_emission_reduction()
+
+
+st.sidebar.image("Screenshot from 2024-09-19 09-27-41.png", width=70)
+
