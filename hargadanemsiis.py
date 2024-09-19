@@ -59,4 +59,4 @@ plot_emission_reduction()
 
 imagee = cv2.imread('Screenshot from 2024-09-19 09-27-41.png')
 cv2.imshow('Image', imagee)
-st.image(imagee, caption='3 marla plot'
+st.image(imagee, caption='3 marla plot')
