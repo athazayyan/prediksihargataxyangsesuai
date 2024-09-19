@@ -56,7 +56,5 @@ plot_price_projection(selected_year)
 plot_emission_reduction()
 
 
-
-imagee = cv2.imread('Screenshot from 2024-09-19 09-27-41.png')
-cv2.imshow('Image', imagee)
-st.image(imagee, caption='3 marla plot')
+image = Image.open('./Floor_plans/3-marla.png')
+st.image(image, caption='3 marla plot',use_column_width=True)
